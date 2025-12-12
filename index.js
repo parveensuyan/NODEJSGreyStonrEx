@@ -1,7 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./ComputerCategoryModel");
+const User = require("./UserModel");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = "MYSECRETKEY123"; // change later
 
 const app = express();
 app.use(express.json());
@@ -23,6 +27,66 @@ app.post("/api/add-category", async (req, res) => {
       .json({ message: "Category created Successfully", category });
   } catch (err) {
     res.status(400).json(err);
+  }
+});
+
+app.get("/api/categories", async (req, res) => {
+  try {
+    const categories = await ComputerCategorySchema.find();
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/categories/:id", async (req, res) => {
+  try {
+    const category = await ComputerCategorySchema.findById(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json(category);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.listen(3000, () => {
+  console.log("API running on http://localhost:3000");
+});
+app.put("/api/categories/:id", async (req, res) => {
+  try {
+    const updatedCategory = await ComputerCategorySchema.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        description: req.body.description,
+        createdAt: req.body.createdAt,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json(updatedCategory);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete("/api/categories/:id", async (req, res) => {
+  try {
+    const deletedCategory = await ComputerCategorySchema.findByIdAndDelete(req.params.id);
+
+    if (!deletedCategory) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json({ message: "Category deleted successfully", deletedCategory });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
