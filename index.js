@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./ComputerCategoryModel");
-const User = require("./UserModel");
+// const User = require("./UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
