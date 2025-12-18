@@ -17,4 +17,8 @@ async function getUserByEmail(email){
     const user = await User.findOne({ email });
     return user;
 }
-module.exports = { createUserService, getUserByEmail };
+async function getUsers() {
+  const user = await User.find();
+  return user;
+}
+module.exports = { createUserService, getUserByEmail, getUsers };

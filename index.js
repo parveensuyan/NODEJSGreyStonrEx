@@ -1,7 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./models/ComputerCategoryModel");
-const { createUser, login } = require("./Controller/UserController");
+const {verifyToken} = require("./middleware/AuthVerifyToken")
+const {
+  createUser,
+  login,
+  getAllUser,
+  showMessage
+} = require("./Controller/UserController");
 
 const app = express();
 app.use(express.json());
@@ -9,6 +15,10 @@ app.use(express.json());
 app.post("/api/register", createUser);
 
 app.post("/api/login", login);
+
+app.get("/api/users", verifyToken, getAllUser);
+app.get("/api/message", verifyToken, showMessage);
+
 
 
 
