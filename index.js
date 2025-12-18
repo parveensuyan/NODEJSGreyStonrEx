@@ -1,43 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./models/ComputerCategoryModel");
-const User = require("./models/UserModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const JWT_SECRET = "PARVEENSYN12334$#"; 
-
-const { createUser } = require("./Controller/UserController");
+const { createUser, login } = require("./Controller/UserController");
 
 const app = express();
 app.use(express.json());
 
 app.post("/api/register", createUser);
 
-// app.post("/api/login",async(req,res)=>{
-
-//     try{
-//         const {email,password} = req.body;
-//           if ( email == "" || password == "") {
-//             return res.status(400).json({ message: "All fileds are required" });
-//           }
-//           const user =  await User.findOne({email})
-//           if(!user){
-//             return res.status(401).json({ message: "Unauthorized user!" });  
-//           }
-//           const matchPassword = bcrypt.compare(password, user.password);
-//           if (!matchPassword) {
-//             return res.status(401).json({ message: "Unauthorized user!" });
-//           }
-//           const token  =  await jwt.sign({
-//               id : user._id,
-//               email 
-//             },JWT_SECRET);
-//           res.json({token:token});
-//     }
-//     catch(err){
-//        res.status(500).json(err.message)
-//     }
-// });
+app.post("/api/login", login);
 
 
 

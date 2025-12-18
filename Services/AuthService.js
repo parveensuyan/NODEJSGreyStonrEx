@@ -1,6 +1,5 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 
 async function createUserService( username, email, password){
@@ -12,4 +11,10 @@ async function createUserService( username, email, password){
     });
     return newUser
 };
-module.exports = { createUserService };
+
+async function getUserByEmail(email){
+    
+    const user = await User.findOne({ email });
+    return user;
+}
+module.exports = { createUserService, getUserByEmail };
