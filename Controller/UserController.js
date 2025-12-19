@@ -3,6 +3,8 @@ const {
   getUserByEmail,
   getUsers,
 } = require("../Services/AuthService");
+const {sendEmail} =  require("../Services/EmailService");
+
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "PARVEENSYN12334$#";
 const bcrypt = require("bcryptjs");
@@ -50,6 +52,12 @@ async function login(req, res) {
   }
 }
 async function getAllUser(req, res) {
+          await sendEmail(
+            "test@gmail.com",
+            "Welcome to My App",
+            `Hi, thanks for signing up!`,
+            `<h1 style = "color:red">Hi</h1><p>Thanks for signing up!</p>`
+          );
   const user = await getUsers();
   return res.status(200).json({ message: "success", data: user });
 }

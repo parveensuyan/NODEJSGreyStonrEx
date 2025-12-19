@@ -1,14 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./models/ComputerCategoryModel");
-const {verifyToken} = require("./middleware/AuthVerifyToken")
+const {verifyToken} = require("./middleware/AuthVerifyToken");
+const {
+  createProduct,
+  getProducts
+,updateProduct} = require("./Controller/ProductController");
 const {
   createUser,
   login,
   getAllUser,
   showMessage
 } = require("./Controller/UserController");
-
+const {insertOrder} = require("./Controller/OrderController")
 const app = express();
 app.use(express.json());
 
@@ -19,8 +23,10 @@ app.post("/api/login", login);
 app.get("/api/users", verifyToken, getAllUser);
 app.get("/api/message", verifyToken, showMessage);
 
-
-
+app.post("/api/products", createProduct);
+app.get("/api/products", getProducts);
+app.post("/api/products/:id", updateProduct);
+app.post("/api/orders",insertOrder);
 
 
 

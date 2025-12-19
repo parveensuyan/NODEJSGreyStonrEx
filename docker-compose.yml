@@ -7,8 +7,11 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
+      - maildev
     environment:
       MONGO_URI: mongodb://mongo:27017/testdb
+      SMTP_HOST: maildev
+      SMTP_PORT: 1025
     volumes:
       - .:/app
       - /app/node_modules
@@ -19,6 +22,13 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
+  maildev:
+    image: maildev/maildev
+    container_name: maildevs
+    ports:
+      - "1080:1080" # Web UI → http://localhost:1080
+      - "1025:1025" # SMTP server
 
 volumes:
   mongo-data:

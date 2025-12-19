@@ -1,7 +1,6 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
 
-
 async function createUserService( username, email, password){
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -13,7 +12,7 @@ async function createUserService( username, email, password){
 };
 
 async function getUserByEmail(email){
-    
+
     const user = await User.findOne({ email });
     return user;
 }

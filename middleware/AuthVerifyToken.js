@@ -12,11 +12,11 @@ async function verifyToken(req, res, next) {
   if (!token) {
     return res.status(401).json({ message: "Invaild token" });
   }
-  try{
+try{
   var decoded = jwt.verify(token, JWT_SECRET);
   req.user = decoded; // attach user info to request
   }
-  catch (err){
+catch (err){
     return res.status(500).json(err.message);
   }
 
