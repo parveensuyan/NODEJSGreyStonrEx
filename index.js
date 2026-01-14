@@ -1,20 +1,29 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const ComputerCategorySchema = require("./models/ComputerCategoryModel");
-const {verifyToken} = require("./middleware/AuthVerifyToken");
+const { verifyToken } = require("./middleware/AuthVerifyToken");
 const {
   createProduct,
-  getProducts
-,updateProduct} = require("./Controller/ProductController");
+  getProducts,
+  updateProduct,
+} = require("./Controller/ProductController");
 const {
   createUser,
   login,
   getAllUser,
-  showMessage
+  showMessage,
 } = require("./Controller/UserController");
-const {insertOrder} = require("./Controller/OrderController")
+const { insertOrder } = require("./Controller/OrderController");
+const {
+  createEmployeeRecord,
+  selectEmployeeRecord,
+} = require("./Controller/EmployeeController");
 const app = express();
 app.use(express.json());
+
+app.get("/api/employee", selectEmployeeRecord);
+
+app.post("/api/employee", createEmployeeRecord);
 
 app.post("/api/register", createUser);
 
@@ -26,26 +35,7 @@ app.get("/api/message", verifyToken, showMessage);
 app.post("/api/products", createProduct);
 app.get("/api/products", getProducts);
 app.post("/api/products/:id", updateProduct);
-app.post("/api/orders",insertOrder);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.post("/api/orders", insertOrder);
 
 const MONGO_URL = "mongodb://mongo:27017/computerdb";
 
@@ -53,7 +43,6 @@ mongoose
   .connect(MONGO_URL)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
-
 
 app.post("/api/add-category", async (req, res) => {
   try {
@@ -130,10 +119,11 @@ app.patch("/categories/:id", async (req, res) => {
   }
 });
 
-
 app.delete("/api/categories/:id", async (req, res) => {
   try {
-    const deletedCategory = await ComputerCategorySchema.findByIdAndDelete(req.params.id);
+    const deletedCategory = await ComputerCategorySchema.findByIdAndDelete(
+      req.params.id
+    );
 
     if (!deletedCategory) {
       return res.status(404).json({ message: "Category not found" });
@@ -144,5 +134,3 @@ app.delete("/api/categories/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-

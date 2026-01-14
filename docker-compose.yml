@@ -8,8 +8,13 @@ services:
     depends_on:
       - mongo
       - maildev
+      - mysql
     environment:
       MONGO_URI: mongodb://mongo:27017/testdb
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: mydb
       SMTP_HOST: maildev
       SMTP_PORT: 1025
     volumes:
@@ -30,5 +35,25 @@ services:
       - "1080:1080" # Web UI → http://localhost:1080
       - "1025:1025" # SMTP server
 
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: adminers
+    restart: always
+    ports:
+      - 8080:8080
+
 volumes:
   mongo-data:
+  mysql-data:
