@@ -7,14 +7,45 @@ async function createEmployeeProfile(data) {
   );
   return insertRecord;
 }
-async function selectEmployeeProfile(orderBy = "asc") {
-  const result = await pool.query("select * from employee_table order by name asc");
+async function selectEmployeeProfile(data) {
+  var param = `%${data}%`;
+
+  const [result] = await pool.query(
+    "select * from employee_table  where name LIKE ? ",
+    [param]
+  );
   return result;
 }
-// async function deleteEmployeeProfile(employeeId) {
-//   const insertRecord = await pool.query(
-//     "delete from employee_table"
-//   );
-//   return insertRecord;
-// }
-module.exports = { createEmployeeProfile, selectEmployeeProfile };
+async function searchEmployeeProfile(param) {
+  var queryParam = [];
+  var sql = "select * from employee_table";
+  if (param.searchString) {
+    sql += " where name LIKE ? OR email  LIKE ?";
+    queryParam.push(param.searchString);
+    queryParam.push(param.searchString);
+  }
+  if (param.limit) {
+    sql += " limit ?";
+    queryParam.push(param.limit);
+  }
+  if (param.offset) {
+    sql += "  offset ?";
+    queryParam.push(param.offset);
+  }
+  const [result] = await pool.query(sql, [queryParam]);
+  return result;
+}
+
+async function deleteEmployeeProfile(employeeId) {
+  const [result] = await pool.query(
+    "delete from employee_table WHERE  employee_id = ?",
+    [employeeId]
+  );
+  return result;
+}
+module.exports = {
+  createEmployeeProfile,
+  selectEmployeeProfile,
+  deleteEmployeeProfile,
+  searchEmployeeProfile,
+};

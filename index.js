@@ -17,11 +17,15 @@ const { insertOrder } = require("./Controller/OrderController");
 const {
   createEmployeeRecord,
   selectEmployeeRecord,
+  deleteEmployeeRecord,
+  searchEmployeeRecord,
 } = require("./Controller/EmployeeController");
 const app = express();
 app.use(express.json());
 
-app.get("/api/employee", selectEmployeeRecord);
+app.get("/api/employee/", searchEmployeeRecord);
+app.get("/api/employee/:employeeId", selectEmployeeRecord);
+app.delete("/api/employee/:employeeId", deleteEmployeeRecord);
 
 app.post("/api/employee", createEmployeeRecord);
 
